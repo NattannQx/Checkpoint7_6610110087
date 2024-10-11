@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Tag: {{ tag_name }}{% endblock %}
+{% block body %}
+<ul class="nav justify-content-center" style="padding-top: 1em">
+  <li class="nav-item">
+    <a class="btn btn-primary" href="{{ url_for('index') }}">Home</a>
+  </li>
+</ul>
+
+<!-- Form for editing the tag -->
+<form action="" method="POST">
+  {{ form.hidden_tag() }}
+  <div class="form-group my-3">
+    {{ form.tag.label }} {{ form.tag(class_='form-control', value=tag_name) }}
+  </div>
+  <button type="submit" class="btn btn-primary">Update Tag</button>
+</form>
+
+<!-- List of notes associated with this tag -->
+{% for note in notes %}
+<a
+  href="{{ url_for('note_view', note_id=note.id) }}"
+  style="text-decoration: none; color: black"
+>
+  <div class="card my-3">
+    <div class="card-body">
+      <h4 class="card-title">{{ note.title }}</h4>
+      <div class="card-text my-3">{{ note.description }}</div>
+      <div class="card-footer text-muted">
+        Tags: 
+        {% for t in note.tags %}
+        <a href="{{ url_for('tags_view', tag_name=t.name) }}">{{ t.name }}</a>,
+        {% endfor %}
+        <br />
+        Last update: {{ note.updated_date }}
+      </div>
+    </div>
+  </div>
+</a>
+{% endfor %}
+
+{% endblock %}

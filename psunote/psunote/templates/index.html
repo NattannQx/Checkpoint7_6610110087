@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="container mt-4">
+  <!-- Create Note button -->
+  <div class="row mb-4">
+    <div class="col text-center">
+      <a class="btn btn-primary" href="{{ url_for('notes_create') }}">Create Note</a>
+    </div>
+  </div>
+
+  <!-- Row for Notes and Tags section -->
+  <div class="row">
+    
+    <!-- Notes Section (left) -->
+    <div class="col-md-8">
+      <h3 class="mb-4">Notes</h3>
+      <!-- List of Notes -->
+      {% for note in notes %}
+      <a
+        href="{{ url_for('note_view', note_id=note.id) }}"
+        style="text-decoration: none; color: black"
+      >
+        <div class="card my-3">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4 class="card-title">{{ note.title }}</h4>
+              <div>
+                <!-- Edit button -->
+                <a href="{{ url_for('note_view', note_id=note.id) }}" class="btn btn-warning">Edit</a>
+                <!-- Delete button -->
+                <form
+                  action="{{ url_for('note_delete', note_id=note.id) }}"
+                  method="POST"
+                  style="display: inline"
+                >
+                  <input type="hidden" name="_method" value="DELETE" />
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </div>
+            </div>
+            <div class="card-text my-3">{{ note.description }}</div>
+            <div class="card-footer text-muted">
+              Tags: 
+              {% for t in note.tags %}
+              <a href="{{ url_for('tags_view', tag_name=t.name) }}">{{ t.name }}</a>
+              {% endfor %}
+              <br />
+              Last update: {{ note.updated_date }}
+            </div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Tags Section (right) -->
+    <div class="col-md-4">
+      <h3 class="mb-4">Tags</h3>
+      <ul class="list-group">
+        {% for tag in tags %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ tag.name }}
+          <div>
+            <a href="{{ url_for('tags_view', tag_name=tag.name) }}" class="btn btn-warning">Edit</a>
+            <form
+              action="{{ url_for('tag_delete', tag_id=tag.id) }}"
+              method="POST"
+              style="display: inline"
+            >
+              <input type="hidden" name="_method" value="DELETE" />
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
